@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29319.158
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PLC_Monitor_Interface", "PLC_Monitor_Interface\PLC_Monitor_Interface.csproj", "{E62FA7EB-C27F-4413-9797-455A727F338A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E62FA7EB-C27F-4413-9797-455A727F338A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E62FA7EB-C27F-4413-9797-455A727F338A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E62FA7EB-C27F-4413-9797-455A727F338A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E62FA7EB-C27F-4413-9797-455A727F338A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8A526897-C3B3-48E0-A38E-E6B390C4A06C}
+	EndGlobalSection
+EndGlobal
