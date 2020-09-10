@@ -1,0 +1,311 @@
+﻿<Window x:Class="PLC_Monitor_Interface.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PLC_Monitor_Interface"
+        mc:Ignorable="d"
+        Title="PLC Monitor Interface" Height="750" Width="1250" MinHeight="550" MinWidth="900" 
+        SizeChanged="Window_SizeChanged" ResizeMode="CanResizeWithGrip" >
+    <Window.Resources>
+        <Style TargetType="Button" x:Key="ButtonStyle">
+            <Setter Property="Background" Value="LightGray" />
+            <Setter Property="Foreground" Value="Black" />
+            <Setter Property="TextBlock.TextAlignment" Value="Center" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="_border" CornerRadius="20" 
+						Background="{TemplateBinding Background}" BorderBrush="#ccc" 
+						BorderThickness="6, 0, 3, 6" >
+                            <ContentPresenter x:Name="contentPresenter" 
+									  ContentTemplate="{TemplateBinding ContentTemplate}" 
+									  Content="{TemplateBinding Content}" 
+									  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+									  Margin="{TemplateBinding Padding}"
+									  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+									  />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="BorderBrush" TargetName="_border" Value="LightBlue"></Setter>
+                                <Setter Property="Background" Value="LightBlue"></Setter>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="Gray"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="ToggleButton" x:Key="ToggleStyle">
+            <Setter Property="Background" Value="LightGray" />
+            <Setter Property="Foreground" Value="Black" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border x:Name="_border" CornerRadius="20" 
+						Background="{TemplateBinding Background}" BorderBrush="#ccc" 
+						BorderThickness="6, 0, 3, 6" >
+                            <ContentPresenter x:Name="contentPresenter" 
+									  ContentTemplate="{TemplateBinding ContentTemplate}" 
+									  Content="{TemplateBinding Content}" 
+									  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+									  Margin="{TemplateBinding Padding}"
+									  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+									  />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="BorderBrush" TargetName="_border" Value="LightBlue"></Setter>
+                                <Setter Property="Background" Value="LightBlue"></Setter>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="BorderBrush" TargetName="_border" Value="LightBlue"></Setter>
+                                <Setter Property="Background" Value="LightBlue"></Setter>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="Gray"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="TextBlock" x:Key="buttonTextStyle">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontWeight" Value="DemiBold"/>
+        </Style>
+        <Style TargetType="Border" x:Key="borderStyle">
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Margin" Value="5" />
+            <Setter Property="BorderBrush" Value="Black" />
+            <Setter Property="CornerRadius" Value="25" />
+        </Style>
+        <local:AddressType x:Key="AddressType" />
+        <local:VariableType x:Key="VariableType" />
+        <BooleanToVisibilityConverter x:Key="btov" />
+    </Window.Resources>
+    
+    <Viewbox VerticalAlignment="Top" Margin="10 20" >
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="6*" />
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                    <TextBlock Text="PLC IP Address:" 
+                               VerticalAlignment="Center" 
+                               FontSize="20" 
+                               FontWeight="DemiBold" 
+                               Margin="10 0 0 0"/>
+                    <StackPanel x:Name="stack_IP" Orientation="Horizontal" Margin="0">
+                        <TextBox Name="IP_1" 
+                                 Background="Transparent" 
+                                 Width="50" Height="40" 
+                                 VerticalAlignment="Center"  
+                                 FontSize="20" TextAlignment="Center" 
+                                 VerticalContentAlignment="Center" 
+                                 MaxLength="3" PreviewTextInput="TextBox_PreviewTextInput" 
+                                 TextChanged="TextBox_TextChanged"
+                                 GotFocus="IP_GotFocus" 
+                                 DataObject.Pasting="TextBox_Pasting" Margin="5 0 0 0"/>
+                        <TextBlock Text="." Background="Transparent" 
+                                   VerticalAlignment="Center" 
+                                   FontSize="20" FontWeight="DemiBold"/>
+                        <TextBox Name="IP_2" 
+                                 Background="Transparent" 
+                                 Width="50" Height="40" 
+                                 VerticalAlignment="Center"  
+                                 FontSize="20" TextAlignment="Center" 
+                                 VerticalContentAlignment="Center" 
+                                 MaxLength="3" PreviewTextInput="TextBox_PreviewTextInput" 
+                                 TextChanged="TextBox_TextChanged"
+                                 GotFocus="IP_GotFocus" 
+                                 DataObject.Pasting="TextBox_Pasting" />
+                        <TextBlock Text="." Background="Transparent" 
+                                   VerticalAlignment="Center" 
+                                   FontSize="20" FontWeight="DemiBold"/>
+                        <TextBox Name="IP_3" 
+                                 Background="Transparent" 
+                                 Width="50" Height="40" 
+                                 VerticalAlignment="Center"  
+                                 FontSize="20" TextAlignment="Center" 
+                                 VerticalContentAlignment="Center" 
+                                 MaxLength="3" PreviewTextInput="TextBox_PreviewTextInput" 
+                                 TextChanged="TextBox_TextChanged"
+                                 GotFocus="IP_GotFocus" 
+                                 DataObject.Pasting="TextBox_Pasting"/>
+                        <TextBlock Text="." Background="Transparent" 
+                                   VerticalAlignment="Center" 
+                                   FontSize="20" FontWeight="DemiBold"/>
+                        <TextBox Name="IP_4" 
+                                 Background="Transparent" 
+                                 Width="50" Height="40" 
+                                 VerticalAlignment="Center"  
+                                 FontSize="20" TextAlignment="Center" 
+                                 VerticalContentAlignment="Center" 
+                                 MaxLength="3" PreviewTextInput="TextBox_PreviewTextInput" 
+                                 TextChanged="TextBox_TextChanged"
+                                 GotFocus="IP_GotFocus" 
+                                 DataObject.Pasting="TextBox_Pasting" Margin="0 0 5 0"/>
+                    </StackPanel>
+                    
+                </StackPanel>
+                
+                <Border Grid.Column="1" BorderThickness="2" Margin="5" 
+                        BorderBrush="Black" CornerRadius="25" >
+                    <UniformGrid Columns="2" Rows="1">
+                        <Button x:Name="btn_Connect" 
+                                Click="btn_Connect_Click" 
+                                Style="{StaticResource ButtonStyle}" Margin="2">
+                            <TextBlock Style="{StaticResource buttonTextStyle}" Text="Connect" />
+                        </Button>
+                        <Button x:Name="btn_Disconnect" 
+                                Click="btn_Disconnect_Click" 
+                                Style="{StaticResource ButtonStyle}" Margin="2">
+                            <TextBlock Style="{StaticResource buttonTextStyle}" Text="Disconnect" />
+                        </Button>
+                    </UniformGrid>
+                </Border>
+                
+                <Border Grid.Column="2" BorderThickness="2" Margin="5" 
+                        BorderBrush="Black" CornerRadius="25" >
+                    <UniformGrid Columns="2" Rows="1">
+                        <Button x:Name="btn_Import" 
+                                Style="{StaticResource ButtonStyle}" Margin="2"
+                                Click="btn_Import_Click">
+                            <TextBlock Style="{StaticResource buttonTextStyle}" Text="Import" />
+                        </Button>
+                        <Button x:Name="btn_Export" 
+                                Style="{StaticResource ButtonStyle}" Margin="2" 
+                                Click="btn_Export_Click">
+                            <TextBlock Style="{StaticResource buttonTextStyle}" Text="Export" />
+                        </Button>
+                    </UniformGrid>
+                </Border>
+            </Grid>
+
+            <DataGrid Grid.Row="1" 
+                      x:Name="varGrid" 
+                      Margin="5" MinHeight="300" 
+                      ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+                      AutoGenerateColumns="False" CanUserAddRows="True" CanUserResizeColumns="False" 
+                      CanUserResizeRows="False"
+                      ItemsSource="{Binding Path=varList}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Variable Name" Width="Auto" Binding="{Binding Path=Name}"/>
+                    <DataGridTemplateColumn Header="Address Type" Width="Auto">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Path=AType}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                        <DataGridTemplateColumn.CellEditingTemplate>
+                            <DataTemplate>
+                                <ComboBox Height="20" ItemsSource="{StaticResource AddressType}" 
+                                          SelectedItem="{Binding Path=AType, UpdateSourceTrigger=PropertyChanged}" IsEditable="False"
+                                          IsTextSearchEnabled="True">
+                                </ComboBox>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Variable Type" Width="Auto">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Path=VType}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                        <DataGridTemplateColumn.CellEditingTemplate>
+                            <DataTemplate>
+                                <ComboBox Height="20" ItemsSource="{StaticResource VariableType}" SelectedItem="{Binding Path=VType,UpdateSourceTrigger=PropertyChanged}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="DB No" Width="Auto" Binding="{Binding Path=DBNo}"/>
+                    <DataGridTextColumn Header="Byte No" Width="Auto" Binding="{Binding Path=ByteNo}"/>
+                    <DataGridTextColumn Header="Bit No" Width="Auto" Binding="{Binding Path=BitNo}"/>
+                    <DataGridTextColumn Header="Monitor Value" Width="Auto" IsReadOnly="True"  Binding="{Binding Path=MonitorValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding isOnline, UpdateSourceTrigger=PropertyChanged}" Value="True">
+                                        <Setter Property="Background" Value="LightGreen"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding isOnline, UpdateSourceTrigger=PropertyChanged}" Value="False">
+                                        <Setter Property="Background" Value="Transparent"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTemplateColumn Header="Is Modified" Width="Auto">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding Path=IsModified, UpdateSourceTrigger=PropertyChanged}"
+                                          IsThreeState="False" IsEnabled="{Binding Path=EnableModify, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Modify Value" Width="Auto" Binding="{Binding Path=ModifyValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+            
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.5*"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <ProgressBar Grid.Column="0" x:Name="onlineBar" 
+                             IsIndeterminate="True" 
+                             Width="120" Height="30" />
+                
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <TextBlock FontSize="15" FontWeight="DemiBold" VerticalAlignment="Center">
+                        <Run Text="Monitoring Cycle" />
+                        <LineBreak/>
+                        <Run Text="Time (ms):" />
+                    </TextBlock>
+                    <TextBox x:Name="txt_Cycle" Text="500" 
+                             FontSize="15" VerticalAlignment="Center" 
+                             Width="40" MinHeight="30" 
+                             HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
+                             PreviewTextInput="TextBox_PreviewTextInput" 
+                             GotFocus="IP_GotFocus" DataObject.Pasting="TextBox_Pasting"
+                             Margin="10 0 0 0"/>
+                    <Button x:Name="btn_Modify" 
+                            Style="{StaticResource ButtonStyle}" Margin="20 7 5 7 " 
+                            Click="btn_Modify_Click">
+                        <TextBlock Style="{StaticResource buttonTextStyle}" Text="Modify Now" />
+                    </Button>
+                </StackPanel>
+                
+                <Border Grid.Column="2" BorderThickness="2" Margin="5" 
+                        BorderBrush="Black" CornerRadius="25" Padding="0">
+                    <UniformGrid Columns="2" Rows="1">
+                        <Button x:Name="btn_Online" 
+                                Click="btn_Online_Click" 
+                                Style="{StaticResource ButtonStyle}" Margin="2">
+                            <TextBlock Style="{StaticResource buttonTextStyle}" Text="Go Online" />
+                        </Button>
+                        <Button x:Name="btn_Offline"
+                                Click="btn_Offline_Click" Style="{StaticResource ButtonStyle}" Margin="2">
+                            <TextBlock Style="{StaticResource buttonTextStyle}" Text="Go Offline" />
+                        </Button>
+                    </UniformGrid>
+                </Border>
+            </Grid>
+        </Grid>
+    </Viewbox>
+
+</Window>
